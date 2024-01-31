@@ -1,7 +1,7 @@
 import express from "express";
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 app.use(express.json());
 
@@ -10,10 +10,14 @@ app.get("/", (req, res) => {
 });
 
 app.post("/weather", (req, res) => {
-  const cityName = req.body.cityName;
-
-  res.send(`You entered: ${cityName}`);
+  const { cityName } = req.body;
+  if (!cityName) {
+    res.status(404).send("Error: You should enter the city name");
+  } else {
+    res.send(`You entered: ${cityName}`);
+  }
 });
-app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
+
+app.listen(PORT, () => {
+  console.log(`Server is listening at http://localhost:${PORT}`);
 });
