@@ -13,9 +13,9 @@ app.post("/weather", (req, res) => {
   const { cityName } = req.body;
   if (!cityName) {
     res.status(404).send("Error: You should enter the city name");
-  } else {
-    res.send(`You entered: ${cityName}`);
-  }
+  } 
+    res.json(`You entered: ${cityName}`);
+  
 });
 
 app.listen(PORT, () => {
