@@ -1,5 +1,6 @@
 import express from "express";
-
+import fetch from "node-fetch";
+import { Keys } from "./sources/keys.js";
 const app = express();
 const PORT = 3000;
 
@@ -9,12 +10,21 @@ app.get("/", (req, res) => {
   res.send("hello from backend to frontend!");
 });
 
-app.post("/weather", (req, res) => {
+app.post("/weather", async (req, res) => {
   const { cityName } = req.body;
   if (!cityName) {
-    res.status(404).send("Error: You should enter the city name");
+    res.status(404).send("City name is required");
+    return;
   }
-  res.json(`You entered: ${cityName}`);
+  try {
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${Keys.API_KEY}&units=metric`
+    );
+    const data = await response.json();
+    res.status(200).send({ weatherText: `${cityName} ${data.main.temp}` });
+  } catch (error) {
+    res.status(404).send({ weatherText: "City is not found!" });
+  }
 });
 
 app.listen(PORT, () => {
